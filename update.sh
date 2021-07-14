@@ -11,5 +11,5 @@ if ! [ -x "$(command -v jq)" ]; then
 fi
 sudo cp $SRC_FILE $BKP_FILE
 sudo jq '.extensionsGallery' $BKP_FILE
-sudo jq 'del(.extensionsGallery[])' $BKP_FILE | jq '.extensionsGallery |= . + {"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery", "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index", "itemUrl": "https://marketplace.visualstudio.com/items"}' > $SRC_FILE
+sudo jq 'del(.extensionsGallery[])' $BKP_FILE | sudo jq '.extensionsGallery |= . + {"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery", "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index", "itemUrl": "https://marketplace.visualstudio.com/items"}' > $SRC_FILE
 sudo jq '.extensionsGallery ' $SRC_FILE
