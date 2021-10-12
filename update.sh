@@ -2,6 +2,13 @@
 NOW=$(date +"%Y%m%d-%H%M")
 JSON_FILE='product.json'
 SRC_DIR="$(sudo find / -path "*resources/app/$JSON_FILE" -exec dirname {} \; 2>/dev/null)"/
+
+if test -z "$SRC_DIR" 
+then
+    echo "$JSON_FILE not found, exit!!!"
+	exit 0
+fi
+
 SRC_FILE=$SRC_DIR$JSON_FILE
 BKP_FILE=$SRC_DIR$JSON_FILE.$NOW
 
