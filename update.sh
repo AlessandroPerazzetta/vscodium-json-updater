@@ -1,9 +1,13 @@
 #!/bin/bash
 NOW=$(date +"%Y%m%d-%H%M")
-SRC_DIR='/usr/share/codium/resources/app/'
 JSON_FILE='product.json'
+SRC_DIR="$(sudo find / -path "*resources/app/$JSON_FILE" -exec dirname {} \; 2>/dev/null)"/
 SRC_FILE=$SRC_DIR$JSON_FILE
 BKP_FILE=$SRC_DIR$JSON_FILE.$NOW
+
+echo "JSON found at: $SRC_DIR"
+echo "Backup $SRC_FILE to $BKP_FILE"
+echo "Replacing content on: $SRC_FILE"
 
 if ! [ -x "$(command -v jq)" ]; then
 	echo 'Error: jq is not installed.' >&2
