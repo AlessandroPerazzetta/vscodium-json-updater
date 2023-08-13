@@ -1,7 +1,7 @@
 #!/bin/bash
 NOW=$(date +"%Y%m%d-%H%M")
 JSON_FILE='product.json'
-SRC_DIR="$(sudo find / -path "*resources/app/$JSON_FILE" -exec dirname {} \; 2>/dev/null)"/
+SRC_DIR="$(sudo find / -path "*esources/app/$JSON_FILE" -type f -print -quit; 2>/dev/null)"
 
 if test -z "$SRC_DIR" 
 then
@@ -9,8 +9,8 @@ then
 	exit 0
 fi
 
-SRC_FILE=$SRC_DIR$JSON_FILE
-BKP_FILE=$SRC_DIR$JSON_FILE.$NOW
+SRC_FILE=$SRC_DIR
+BKP_FILE=$SRC_DIR.$NOW
 
 echo "JSON found at: $SRC_DIR"
 echo "Backup $SRC_FILE to $BKP_FILE"
@@ -20,6 +20,7 @@ if ! [ -x "$(command -v jq)" ]; then
 	echo 'Error: jq is not installed.' >&2
 	exit 1
 fi
+
 sudo -i -- <<EOF
 cp $SRC_FILE $BKP_FILE
 jq '.extensionsGallery' $BKP_FILE
