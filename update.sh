@@ -3,6 +3,57 @@ NOW=$(date +"%Y%m%d-%H%M")
 JSON_FILE='product.json'
 SRC_DIR="$(sudo find / -path "*esources/app/$JSON_FILE" -type f -print -quit 2>/dev/null)"
 
+# Check dependencies
+deps=("jq")
+missingdeps=""
+# missingdepsinstall="sudo apt install"
+missingdepsinstall=""
+
+OS=$(uname -s | tr A-Z a-z)
+case $OS in
+  linux)
+    source /etc/os-release
+    case $ID_LIKE in
+      debian|ubuntu|mint)
+        missingdepsinstall="sudo apt install"
+        ;;
+
+      fedora|rhel|centos)
+        missingdepsinstall="sudo yum install"
+        ;;
+      arch)
+        missingdepsinstall="yay -S"
+        ;;
+      *)
+        echo -n "unsupported linux package manager"
+        ;;
+    esac
+  ;;
+
+  darwin)
+    missingdepsinstall="brew install"
+  ;;
+
+  *)
+    echo -n "unsupported OS"
+    ;;
+esac
+
+for dep in "${deps[@]}"; do
+	if ! type $(echo "$dep" | cut -d\| -f1) &> /dev/null; then
+		missingdeps=$(echo "$missingdeps$(echo "$dep" | cut -d\| -f1), ")
+		missingdepsinstall=$(echo "$missingdepsinstall $(echo "$dep" | cut -d\| -f2)")
+	fi
+done
+if [ -n "$missingdeps" ]; then
+	echo "[ERROR] Missing dependencies! ($(echo "$missingdeps" | xargs | sed 's/.$//'))"
+	echo "        You can install them using this command:"
+	echo "        ----------------------------------------"
+	echo "        $missingdepsinstall"
+	echo "        ----------------------------------------"
+	exit 1
+fi
+
 if test -z "$SRC_DIR" 
 then
     echo "$JSON_FILE not found, exit!!!"
