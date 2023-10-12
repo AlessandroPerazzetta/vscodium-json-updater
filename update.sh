@@ -1,8 +1,4 @@
 #!/bin/bash
-NOW=$(date +"%Y%m%d-%H%M")
-JSON_FILE='product.json'
-SRC_DIR="$(sudo find / -path "*esources/app/$JSON_FILE" -type f -print -quit 2>/dev/null)"
-
 # Check dependencies
 deps=("jq")
 missingdeps=""
@@ -53,6 +49,10 @@ if [ -n "$missingdeps" ]; then
 	echo "        ----------------------------------------"
 	exit 1
 fi
+
+NOW=$(date +"%Y%m%d-%H%M")
+JSON_FILE='product.json'
+SRC_DIR="$(sudo find / -path "*esources/app/$JSON_FILE" -type f -print -quit 2>/dev/null)"
 
 if test -z "$SRC_DIR" 
 then
